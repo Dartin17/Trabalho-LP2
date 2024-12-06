@@ -11,6 +11,7 @@ import TelaLogin from "./components/Telas/TelaLogin";
 
 export const ContextoUsuario = createContext();
 
+
 function App() {
     const [usuario, setUsuario] = useState({
         nome: "",

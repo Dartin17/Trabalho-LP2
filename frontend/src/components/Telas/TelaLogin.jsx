@@ -10,49 +10,55 @@ export default function TelaLogin() {
     const [carregando, setCarregando] = useState(false);
     const [formValidado, setFormValidado] = useState(false);
 
-    async function manipularSubmissao(evento) {
+    function manipularSubmissao(evento) {
         evento.preventDefault();
         evento.stopPropagation();
-
+    
         const form = evento.currentTarget;
         if (form.checkValidity()) {
             setFormValidado(false);
             setCarregando(true);
-
+    
             const nomeDig = nome.current.value;
             const senhaDig = senha.current.value;
-
-            try {
-                // Chama a função de login do serviço
-                const resposta = await login(nomeDig, senhaDig);
-
-                if (resposta?.status) {
-                    const { nome, perfil } = resposta.usuario;
-
-                    // Atualiza o estado do contexto
-                    setUsuario({
-                        nome,
-                        perfil,
-                        logado: true,
-                    });
-
-                    // Opcional: Armazena as informações no localStorage
-                    localStorage.setItem("usuario", JSON.stringify({ nome, perfil, logado: true }));
-
-                    window.alert("Logado com sucesso!");
-                } else {
-                    window.alert(resposta.mensagem || "Credenciais inválidas.");
-                }
-            } catch (erro) {
-                console.error("Erro ao autenticar:", erro);
-                window.alert("Erro: Não foi possível realizar o login.");
-            } finally {
-                setCarregando(false);
-            }
+    
+            login(nomeDig, senhaDig)
+                .then((resposta) => {
+                    if (resposta?.status) {
+                        // Atualiza o estado do usuário com os dados retornados
+                        setUsuario({
+                            nome: nomeDig, // Usando o nome informado no login
+                            perfil: resposta.perfil, // Usando o perfil retornado pela API
+                            logado: true,
+                        });
+    
+                        // Opcional: Armazena o usuário no localStorage
+                        localStorage.setItem(
+                            "usuario",
+                            JSON.stringify({
+                                nome: nomeDig,
+                                perfil: resposta.perfil,
+                                logado: true,
+                            })
+                        );
+    
+                        window.alert("Logado com sucesso!");
+                    } else {
+                        window.alert(resposta.mensagem || "Credenciais inválidas.");
+                    }
+                })
+                .catch((erro) => {
+                    console.error("Erro ao logar:", erro);
+                    window.alert("Erro: Não foi possível realizar o login.");
+                })
+                .finally(() => {
+                    setCarregando(false);
+                });
         } else {
             setFormValidado(true);
         }
     }
+    
 
     return (
         <Container>
