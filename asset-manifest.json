@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/Dartin17/Trabalho-LP2.git/static/css/main.d221dc40.css",
-    "main.js": "/Dartin17/Trabalho-LP2.git/static/js/main.649e6d28.js",
-    "static/media/imagem404.png": "/Dartin17/Trabalho-LP2.git/static/media/imagem404.22e922b752c5cf81dc1e.png",
-    "index.html": "/Dartin17/Trabalho-LP2.git/index.html",
-    "main.d221dc40.css.map": "/Dartin17/Trabalho-LP2.git/static/css/main.d221dc40.css.map",
-    "main.649e6d28.js.map": "/Dartin17/Trabalho-LP2.git/static/js/main.649e6d28.js.map"
+    "main.css": "/static/css/main.d221dc40.css",
+    "main.js": "/static/js/main.8a9da10b.js",
+    "static/media/imagem404.png": "/static/media/imagem404.22e922b752c5cf81dc1e.png",
+    "index.html": "/index.html",
+    "main.d221dc40.css.map": "/static/css/main.d221dc40.css.map",
+    "main.8a9da10b.js.map": "/static/js/main.8a9da10b.js.map"
   },
   "entrypoints": [
     "static/css/main.d221dc40.css",
-    "static/js/main.649e6d28.js"
+    "static/js/main.8a9da10b.js"
   ]
 }
