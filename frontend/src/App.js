@@ -22,7 +22,7 @@ function App() {
     return (
         <div className="App">
             <ContextoUsuario.Provider value={{ usuario, setUsuario }}>
-                <BrowserRouter>
+                <BrowserRouter basename="/Trabalho-LP2">
                     <Routes>
                         {!usuario.logado ? (
                             <Route path="/" element={<TelaLogin />} />
