@@ -1,12 +1,21 @@
 import { useEffect, useState } from "react";
-import { Col, Form, Row, Button } from "react-bootstrap";
-import { consultar } from "../../../services/servicoCategoria"
-import { gravar, atualizar } from "../../../services/servicoProduto"
+import { Col, Form, Row, Button, Spinner } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { atualizarProduto, gravarProduto, zerarMensagem } from "../../../redux/redux.produto";
+import ESTADO from "../../../redux/redux.estado";
+import { consultarCategorias } from "../../../redux/redux.categoria";
+import { consultarFornecedores } from "../../../redux/redux.fornecedor";
 
 export default function FormCadastroProduto(props) {
+	const dispatch = useDispatch();
+	let { estado, mensagem } = useSelector((state) => state.produtos);
+	const { listaCategorias } = useSelector((state) => state.categorias);
+	const { listaFornecedores } = useSelector((state) => state.fornecedores);
+
 	const [formValidado, setFormValidado] = useState(false);
-	const [categorias, setCategorias] = useState([]);
-	const produtoReseta = {
+	const [carregando, setCarregando] = useState(false); //spinner
+
+	const [produtoReseta] = useState({
 		codigo: "",
 		dataValidade: "",
 		descricao: "",
@@ -17,50 +26,47 @@ export default function FormCadastroProduto(props) {
 		categoria: {
 			codigo: "",
 			descricao: ""
+		},
+		fornecedor: {
+			cnpj: "",
+			nome: ""
 		}
-	};
+	});
+
+	useEffect(()=>{
+		dispatch(consultarCategorias());
+		dispatch(consultarFornecedores());
+	},[dispatch])
 
 	useEffect(() => {
-		consultar()
-			.then((res) => {
-				if (Array.isArray(res))
-					setCategorias(res);
-			})
-	}, [])
+		if (estado === ESTADO.OCIOSO && mensagem) {
+			setCarregando(false);
+			window.alert(mensagem);
+			dispatch(zerarMensagem());
+			props.setProdutoSelecionado(produtoReseta);
+			props.setModoEdicao(false);
+			props.setExibirProdutos(true);
+		}
+		else if (estado === ESTADO.ERRO && mensagem) {
+			setCarregando(false);
+			window.alert(mensagem);
+			dispatch(zerarMensagem());
+		}
+
+	}, [estado, mensagem, props, produtoReseta, dispatch]);
 
 	function manipularSubmissao(evento) {
 		const form = evento.currentTarget;
 		if (form.checkValidity()) {
 			setFormValidado(false);
-			if (!props.modoEdicao) {
-				gravar(props.produtoSelecionado)
-					.then((res) => {
-						if (res.status) {
-							props.setProdutoSelecionado(produtoReseta);
-							props.setModoEdicao(false);
-							props.setExibirProdutos(true);
-						}
-						window.alert(res.mensagem);
-					})
-					.catch((erro) => {
-						window.alert(erro.mensagem);
-					})
-			}
-			else {
-				atualizar(props.produtoSelecionado)
-					.then((res) => {
-						if (res.status) {
-							props.setProdutoSelecionado(produtoReseta);
-							props.setModoEdicao(false);
-							props.setExibirProdutos(true);
-						}
-						window.alert(res.mensagem);
-					});
-			}
+			setCarregando(true);
+			if (!props.modoEdicao)
+				dispatch(gravarProduto(props.produtoSelecionado));
+			else
+				dispatch(atualizarProduto(props.produtoSelecionado));
 		}
-		else {
+		else
 			setFormValidado(true);
-		}
 		evento.preventDefault();
 		evento.stopPropagation();
 	}
@@ -68,10 +74,25 @@ export default function FormCadastroProduto(props) {
 	function manipularMudanca(evento) {
 		const elemento = evento.target.name;
 		let valor = evento.target.value;
+
 		if (elemento === 'categoria') {
+			const categoriaSelecionado = JSON.parse(valor);
 			props.setProdutoSelecionado({
 				...props.produtoSelecionado,
-				[elemento]: { codigo: valor }
+				categoria: {
+					codigo: categoriaSelecionado.codigo,
+					descricao: categoriaSelecionado.descricao
+				}
+			});
+		}
+		else if (elemento === 'fornecedor') {
+			const fornecedorSelecionado = JSON.parse(valor);
+			props.setProdutoSelecionado({
+				...props.produtoSelecionado,
+				fornecedor: {
+					cnpj: fornecedorSelecionado.cnpj,
+					nome: fornecedorSelecionado.nome
+				}
 			});
 		}
 		else {
@@ -80,7 +101,6 @@ export default function FormCadastroProduto(props) {
 				[elemento]: valor,
 			});
 		}
-		console.log(props.produtoSelecionado);
 	}
 
 	return (
@@ -118,7 +138,7 @@ export default function FormCadastroProduto(props) {
 						</Form.Control.Feedback>
 					</Form.Group>
 				</Col>
-				<Col xs={4}>
+				<Col xs={2}>
 					{/* ########## Categoria ########## */}
 					<Form.Group className="mb-3">
 						<Form.Label>Categoria</Form.Label>
@@ -126,18 +146,55 @@ export default function FormCadastroProduto(props) {
 							required
 							id="categoria"
 							name="categoria"
-							value={props.produtoSelecionado.categoria.codigo}
+							value={JSON.stringify(props.produtoSelecionado.categoria)}
 							onChange={manipularMudanca}
+							isInvalid={formValidado && !props.produtoSelecionado.categoria.codigo}
 						>
-							<option value="">Selecionar</option>
-							{categorias.map((categoria) => (
-								<option key={categoria.codigo} value={categoria.codigo}>
+							<option value={JSON.stringify("")}>Selecionar</option>
+							{listaCategorias?.map((categoria) => (
+								<option
+									key={categoria.codigo}
+									value={JSON.stringify({
+										codigo: categoria.codigo,
+										descricao: categoria.descricao
+									})}
+								>
 									{categoria.descricao}
 								</option>
 							))}
 						</Form.Select>
 						<Form.Control.Feedback type="invalid">
 							Por favor, informe a categoria do produto!
+						</Form.Control.Feedback>
+					</Form.Group>
+				</Col>
+				<Col xs={2}>
+					{/* ########## Fornecedor ########## */}
+					<Form.Group className="mb-3">
+						<Form.Label>Fornecedor</Form.Label>
+						<Form.Select
+							required
+							id="fornecedor"
+							name="fornecedor"
+							value={JSON.stringify(props.produtoSelecionado.fornecedor)}
+							onChange={manipularMudanca}
+							isInvalid={formValidado && !props.produtoSelecionado.fornecedor.cnpj}
+						>
+							<option value={JSON.stringify("")}>Selecionar</option>
+							{listaFornecedores?.map((fornecedor) => (
+								<option
+									key={fornecedor.cnpj}
+									value={JSON.stringify({
+										cnpj: fornecedor.cnpj,
+										nome: fornecedor.nome
+									})}
+								>
+									{fornecedor.nome}
+								</option>
+							))}
+						</Form.Select>
+						<Form.Control.Feedback type="invalid">
+							Por favor, informe o fornecedor do produto!
 						</Form.Control.Feedback>
 					</Form.Group>
 				</Col>
@@ -238,19 +295,33 @@ export default function FormCadastroProduto(props) {
 			</Row>
 			<Row className="mt-2 mb-2">
 				<Col md={2}>
-					<Button id="botao" type="submit" variant={props.modoEdicao ? "warning" : "success"}>
-						{props.modoEdicao ? "Alterar" : "Confirmar"}
+					<Button disabled={carregando} id="botao" type="submit" variant={props.modoEdicao ? "warning" : "success"}>
+						{carregando ? (
+							<>
+								<Spinner
+									as="span"
+									animation="border"
+									size="sm"
+									role="status"
+									aria-hidden="true"
+									className="me-2"
+								/>
+								Processando...
+							</>
+						) : (
+							props.modoEdicao ? "Alterar" : "Confirmar"
+						)}
 					</Button>
 				</Col>
 				<Col>
-					<Button
+					<Button disabled={carregando}
 						onClick={() => {
 							props.setProdutoSelecionado(produtoReseta);
 							props.setModoEdicao(false);
 							props.setExibirProdutos(true);
 						}}
 						type="button"
-						variant={props.modoEdicao ? "primary" : "success"}
+						variant={props.modoEdicao ? "warning" : "success"}
 					>
 						Voltar
 					</Button>

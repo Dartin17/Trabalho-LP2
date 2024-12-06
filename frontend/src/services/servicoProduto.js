@@ -1,4 +1,5 @@
 const url = 'https://eduardo-lp-2-projeto.vercel.app/produtos/';
+// const url = 'http://localhost:4000/produtos/'
 
 export async function gravar(produto) {
     const res = await fetch(url,{
