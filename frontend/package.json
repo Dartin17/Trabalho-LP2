@@ -2,7 +2,6 @@
   "name": "lp2_frontend",
   "version": "3.0.0",
   "private": true,
-  "homepage": "https://github.com/Dartin17/Trabalho-LP2.git",
   "author": "eduardo",
   "dependencies": {
     "@reduxjs/toolkit": "^2.4.0",
