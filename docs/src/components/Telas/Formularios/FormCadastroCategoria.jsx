@@ -7,7 +7,6 @@ import ESTADO from "../../../redux/reduxEstado";
 export default function FormCadastroCategoria(props) {
 	const dispatch = useDispatch();
 	let { estado, mensagem } = useSelector((state) => state.categorias);
-	const [carregando, setCarregando] = useState(false); //spinner
 
 	const [formValidado, setFormValidado] = useState(false);
 	const [categoriaReseta] = useState({
@@ -17,7 +16,6 @@ export default function FormCadastroCategoria(props) {
 
 	useEffect(() => {
 		if (estado === ESTADO.OCIOSO && mensagem) {
-			setCarregando(false);
 			window.alert(mensagem);
 			dispatch(zerarMensagem());
 			props.setCategoriaSelecionado(categoriaReseta);
@@ -25,7 +23,6 @@ export default function FormCadastroCategoria(props) {
 			props.setExibirCategorias(true);
 		}
 		else if (estado === ESTADO.ERRO && mensagem) {
-			setCarregando(false);
 			window.alert(mensagem);
 			dispatch(zerarMensagem());
 		}
@@ -36,7 +33,6 @@ export default function FormCadastroCategoria(props) {
 		const form = evento.currentTarget;
 		if (form.checkValidity()) {
 			setFormValidado(false);
-			setCarregando(true);
 			if (!props.modoEdicao)
 				dispatch(gravarCategoria(props.categoriaSelecionado));
 			else
@@ -89,26 +85,12 @@ export default function FormCadastroCategoria(props) {
 			</Form.Group>
 			<Row className="mt-2 mb-2">
 				<Col md={2}>
-					<Button disabled={carregando} type="submit" variant={props.modoEdicao ? "warning" : "success"}>
-						{carregando ? (
-							<>
-								<Spinner
-									as="span"
-									animation="border"
-									size="sm"
-									role="status"
-									aria-hidden="true"
-									className="me-2"
-								/>
-								Processando...
-							</>
-						) : (
-							props.modoEdicao ? "Alterar" : "Confirmar"
-						)}
+					<Button type="submit" variant={props.modoEdicao ? "warning" : "success"}>
+						{props.modoEdicao ? "Alterar" : "Confirmar"}
 					</Button>
 				</Col>
 				<Col>
-					<Button disabled={carregando}
+					<Button
 						onClick={() => {
 							props.setCategoriaSelecionado(categoriaReseta);
 							props.setModoEdicao(false);

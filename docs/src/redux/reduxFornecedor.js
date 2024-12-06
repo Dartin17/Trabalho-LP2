@@ -77,6 +77,7 @@ export const deletarFornecedor = createAsyncThunk('deletarFornecedor', async (fo
 // Atualizar fornecedor
 export const atualizarFornecedor = createAsyncThunk('atualizarFornecedor', async (fornecedor, { dispatch }) => {
     try {
+        console.log("Passando aqui");
         const resposta = await atualizar(fornecedor);
         if (resposta.status) {
             dispatch(consultarProdutos());

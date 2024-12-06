@@ -11,14 +11,16 @@ export async function gravar(cliente) {
 }
 
 export async function deletar(cliente) {
-    const res = await fetch(url + cliente.cpf, {
-        method: 'DELETE'
+    const res = await fetch(url, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cliente)
     });
     return await res.json();
 }
 
 export async function atualizar(cliente) {
-    const res = await fetch(url + cliente.cpf, {
+    const res = await fetch(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(cliente)

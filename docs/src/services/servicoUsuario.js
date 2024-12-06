@@ -11,14 +11,16 @@ export async function gravar(usuario) {
 }
 
 export async function deletar(usuario) {
-    const res = await fetch(url + usuario.email, {
-        method: 'DELETE'
+    const res = await fetch(url, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(usuario)
     });
     return await res.json();
 }
 
 export async function atualizar(usuario) {
-    const res = await fetch(url + usuario.email, {
+    const res = await fetch(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(usuario)

@@ -11,14 +11,16 @@ export async function gravar(fornecedor) {
 }
 
 export async function deletar(fornecedor) {
-    const res = await fetch(url + fornecedor.cnpj, {
-        method: 'DELETE'
+    const res = await fetch(url, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fornecedor)
     });
     return await res.json();
 }
 
 export async function atualizar(fornecedor) {
-    const res = await fetch(url + fornecedor.cnpj, {
+    const res = await fetch(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(fornecedor)
