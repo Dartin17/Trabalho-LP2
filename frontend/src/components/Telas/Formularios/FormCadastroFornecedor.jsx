@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Form, Row, Col, Button, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { atualizarFornecedor, gravarFornecedor, zerarMensagem } from "../../../redux/redux.fornecedor";
-import ESTADO from "../../../redux/redux.estado";
+import { atualizarFornecedor, gravarFornecedor, zerarMensagem } from "../../../redux/reduxFornecedor";
+import ESTADO from "../../../redux/reduxEstado";
 
 export default function FormCadastroFornecedor(props) {
     const dispatch = useDispatch();

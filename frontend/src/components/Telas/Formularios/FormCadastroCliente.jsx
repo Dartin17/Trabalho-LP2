@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { Form, Row, Col, Button, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { atualizarCliente, gravarCliente, zerarMensagem } from "../../../redux/redux.cliente";
+import { atualizarCliente, gravarCliente, zerarMensagem } from "../../../redux/reduxCliente";
 import ESTADO from "../../../redux/reduxEstado";
 
 export default function FormCadastroCliente(props) {
     const dispatch = useDispatch();
     let { estado, mensagem } = useSelector((state) => state.clientes);
     const [carregando, setCarregando] = useState(false); //spinner
-
     const [formValidado, setFormValidado] = useState(false);
     const [clienteReseta] = useState({
         nome: "",

@@ -1,16 +1,13 @@
 import { Button, Container, Form, Spinner } from "react-bootstrap";
 import { useContext, useRef, useState } from "react";
 import { ContextoUsuario } from "../../App";
-
 import { login } from "../../services/servicoUsuario";
-import { jwtDecode } from "jwt-decode";
 
 export default function Usuario(props) {
     const nome = useRef();
     const senha = useRef();
-    const { setUsuario } = useContext(ContextoUsuario)
+    const { setUsuario } = useContext(ContextoUsuario);
     const [carregando, setCarregando] = useState(false);
-
     const [formValidado, setFormValidado] = useState(false);
 
     function manipularSubmissao(evento) {
@@ -21,32 +18,37 @@ export default function Usuario(props) {
         if (form.checkValidity()) {
             setFormValidado(false);
             setCarregando(true);
+
             const nomeDig = nome.current.value;
             const senhaDig = senha.current.value;
+
             login(nomeDig, senhaDig)
                 .then((resposta) => {
                     if (resposta?.status) {
-                        const tokenData = jwtDecode(resposta.token);
-                        localStorage.setItem("token", resposta.token);
+                        // Assumindo que o backend retorna as informações do usuário
+                        const { nome, perfil } = resposta.usuario;
+
+                        // Armazena no localStorage ou apenas no estado
+                        localStorage.setItem("usuario", JSON.stringify({ nome, perfil, logado: true }));
                         setUsuario({
-                            "nome": tokenData.nome,
-                            "perfil": tokenData.perfil,
-                            "logado": true
-                        })
-                        window.alert("Logado com Sucesso !");
-                    }
-                    else {
+                            nome,
+                            perfil,
+                            logado: true
+                        });
+
+                        window.alert("Logado com Sucesso!");
+                    } else {
                         window.alert(resposta.mensagem);
                     }
                     setCarregando(false);
                 })
                 .catch((erro) => {
                     setCarregando(false);
-                    window.alert("Erro: " + erro.mensagem);
-                })
-        }
-        else
+                    window.alert("Erro: " + (erro.mensagem || "Não foi possível realizar o login."));
+                });
+        } else {
             setFormValidado(true);
+        }
     }
 
     return (

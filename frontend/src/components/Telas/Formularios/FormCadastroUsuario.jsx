@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Form, Button, Row, Col, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { atualizarUsuario, gravarUsuario, zerarMensagem } from "../../../redux/redux.usuario";
-import ESTADO from "../../../redux/redux.estado";
+import { atualizarUsuario, gravarUsuario, zerarMensagem } from "../../../redux/reduxUsuario";
+import ESTADO from "../../../redux/reduxEstado";
 
 export default function FormCadastroCliente(props) {
     const dispatch = useDispatch();

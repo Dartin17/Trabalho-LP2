@@ -1,4 +1,4 @@
-const url = 'https://eduardo-lp-2-projeto.vercel.app/fornecedores/';
+const url = 'https://eduardo-trabalho-lp-2.vercel.app/fornecedores/';
 // const url = 'http://localhost:4000/fornecedores/'
 
 export async function gravar(fornecedor) {

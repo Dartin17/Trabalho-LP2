@@ -10,7 +10,7 @@ import rotaUsuario from './rotas/rotaUsuario.js';
 dotenv.config();
 
 const host = "0.0.0.0";
-const porta = 4000;
+const porta = 5000;
 const app = express();
 
 app.use(express.json());

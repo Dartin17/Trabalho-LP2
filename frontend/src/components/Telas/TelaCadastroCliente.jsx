@@ -3,11 +3,9 @@ import { useState } from "react";
 import Pagina from "../layouts/Pagina";
 import FormCadastroCliente from "./Formularios/FormCadastroCliente";
 import TabelaClientes from "./Tabelas/TabelaClientes";
-import { clientes } from "../../dados/mockClientes";
 
 export default function TelaCadastroCliente(props) {
   const [exibirClientes, setExibirClientes] = useState(true);
-  const [listaClientes, setListaClientes] = useState(clientes);
   const [modoEdicao, setModoEdicao] = useState(false);
   const [clienteSelecionado, setClienteSelecionado] = useState({
     nome: "",
@@ -28,17 +26,13 @@ export default function TelaCadastroCliente(props) {
       {
         exibirClientes ?
           <TabelaClientes
-            listaClientes={listaClientes}
             setExibirClientes={setExibirClientes}
-            setListaClientes={setListaClientes}
             setClienteSelecionado={setClienteSelecionado}
             setModoEdicao={setModoEdicao}
           />
           :
           <FormCadastroCliente
             setExibirClientes={setExibirClientes}
-            listaClientes={listaClientes}
-            setListaClientes={setListaClientes}
             modoEdicao={modoEdicao}
             setModoEdicao={setModoEdicao}
             clienteSelecionado={clienteSelecionado}

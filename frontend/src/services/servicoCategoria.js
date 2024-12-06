@@ -1,4 +1,4 @@
-const url = 'https://eduardo-lp-2-projeto.vercel.app/categorias/';
+const url = 'https://eduardo-trabalho-lp-2.vercel.app/categorias/';
 // const url = 'http://localhost:4000/categorias/'
 
 export async function gravar(categoria) {

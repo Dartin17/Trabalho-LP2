@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { consultar, deletar, gravar, atualizar } from "../services/servicoUsuario";
-import ESTADO from "./redux.estado";
+import ESTADO from "./reduxEstado";
 
 // Consultar usuários
 export const consultarUsuarios = createAsyncThunk('consultarUsuarios', async () => {

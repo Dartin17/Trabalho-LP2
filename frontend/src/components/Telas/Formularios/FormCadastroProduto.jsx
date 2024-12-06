@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Col, Form, Row, Button, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { atualizarProduto, gravarProduto, zerarMensagem } from "../../../redux/redux.produto";
-import ESTADO from "../../../redux/redux.estado";
-import { consultarCategorias } from "../../../redux/redux.categoria";
-import { consultarFornecedores } from "../../../redux/redux.fornecedor";
+import { atualizarProduto, gravarProduto, zerarMensagem } from "../../../redux/reduxProduto";
+import ESTADO from "../../../redux/reduxEstado";
+import { consultarCategorias } from "../../../redux/reduxCategoria";
+import { consultarFornecedores } from "../../../redux/reduxFornecedor";
 
 export default function FormCadastroProduto(props) {
 	const dispatch = useDispatch();
