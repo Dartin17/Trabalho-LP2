@@ -15,8 +15,8 @@ export const ContextoUsuario = createContext();
 function App() {
     const [usuario, setUsuario] = useState({
         nome: "",
-        perfil: "Admin",
-        logado: true,
+        perfil: "",
+        logado: false,
     });
 
     return (
