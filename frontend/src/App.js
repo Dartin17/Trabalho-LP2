@@ -22,7 +22,7 @@ function App() {
     return (
         <div className="App">
             <ContextoUsuario.Provider value = {{ usuario, setUsuario }}>
-                <BrowserRouter basename="/Trabalho-LP2">
+                <BrowserRouter>
                     <Routes>
                         {
                             !carregando ? (
